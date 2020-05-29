@@ -1,6 +1,6 @@
 ---
 title: "Machine Learning Project"
-date: 2018-01-28
+date: 2019-01-28
 tags: [machine learning, data science, nlp]
 header:
   image: "/images/perceptron/percept.jpg"
