@@ -7,4 +7,5 @@ header:
   image: "/images/fort point.png"
 ---
 
+Some of my machine learning projects are listed here!
 
