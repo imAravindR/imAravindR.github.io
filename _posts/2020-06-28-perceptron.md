@@ -159,7 +159,6 @@ bank_data.head()
 # Dimensions
 print("Number of Rows: {} \nNumber of Columns: {}".format(bank_data.shape[0],bank_data.shape[1]))
 ```
-
 Number of Rows: 10000 
 Number of Columns: 14
   
@@ -365,8 +364,22 @@ Total memory used after Memory reduction  0.31Mb
     
 
 ## Exploratory Data Analysis (EDA)
+The purpose of EDA is to understand how different variables are related to our target (Exited) variable.
 
 
+```python
+import plotly.graph_objects as go
+
+labels = ['Exited','Continued']
+values =  [bank_data.Exited[bank_data['Exited']==1].count(), bank_data.Exited[bank_data['Exited']==0].count()]
+colors = ['red', 'darkorange']
+fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+fig.update_traces(hole=.4, hoverinfo='label+value',  textfont_size=20,
+                  marker=dict(colors=colors, line=dict(color='#000000', width=2)))
+fig.update_layout(
+    title_text="Ratio of Customer Churned and Retained")
+fig.show()
+```
 
 
 
