@@ -382,4 +382,53 @@ fig.show()
 fig.write_html(fig, file='pie_chart.html', auto_open=True)
 
 ```
-<html src="{{ site.url }}{{ site.baseurl }}/images/perceptron/pie_chart.html" alt="Pie Chart">
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/pie_chart.png" alt="Pie Chart">
+
+
+### Gender 
+
+Who is loyal to the bank? Male or Female?
+
+
+```python
+print(bank_data[['Gender','Exited']].groupby(['Gender']).mean())
+print()
+print("Female - Exited: ",len(bank_data[(bank_data['Exited'] == 1) & (bank_data['Gender'] == 'Female')]))
+print("Female - Retained: ",len(bank_data[(bank_data['Exited'] == 0) & (bank_data['Gender'] == 'Female')]))
+print()
+print("Male - Exited: ",len(bank_data[(bank_data['Exited'] == 1) & (bank_data['Gender'] == 'Male')]))
+print("Male - Retained: ",len(bank_data[(bank_data['Exited'] == 0) & (bank_data['Gender'] == 'Male')]))
+```
+
+            Exited
+  Gender          
+  Female  0.250715
+  Male    0.164559
+
+  Female - Exited:  1139
+  Female - Retained:  3404
+
+  Male - Exited:  898
+  Male - Retained:  4559
+    
+
+
+```python
+# Gender,HasCrCard,IsActiveMember vs Churn
+f,ax=plt.subplots(3,2,figsize=(18,25))
+bank_data[['Gender','Exited']].groupby(['Gender']).mean().plot.bar(ax=ax[0][0])
+ax[0][1].set_title('Churn vs Gender')
+sns.countplot('Gender',hue='Exited',data=bank_data,ax=ax[0][1])
+ax[0][1].set_title('Gender:Churned vs Retained')
+bank_data[['HasCrCard','Exited']].groupby(['HasCrCard']).mean().plot.bar(ax=ax[1][0])
+ax[1][0].set_title('Churn vs HasCrCard')
+sns.countplot('HasCrCard',hue='Exited',data=bank_data,ax=ax[1][1])
+ax[1][1].set_title('HasCrCard: Churned vs Retained')
+bank_data[['IsActiveMember','Exited']].groupby(['IsActiveMember']).mean().plot.bar(ax=ax[2][0])
+ax[2][0].set_title('Churn vs IsActiveMember')
+sns.countplot('IsActiveMember',hue='Exited',data=bank_data,ax=ax[2][1])
+ax[2][1].set_title('IsActiveMember: Churned vs Retained')
+plt.show()
+```
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_22_0.png" alt="Gender,HasCrCard,IsActiveMember vs Churn">
