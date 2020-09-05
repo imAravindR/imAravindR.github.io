@@ -365,6 +365,7 @@ cordata.style.background_gradient(cmap='summer')
 ```
 <img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/corplot.png" alt="Cor Plot">
 
+
 Age has some correlation (28.5%) with Churn rate. There are no real highly correlated features. NumberOfProducts and Balance are 30.4% Correlated among themselves. Apart from that there are no multi-collinear features which is good.
 
 Let's try and create some features [feature engineering]. Let's See if we can create more useful features.
@@ -568,6 +569,229 @@ X_train.head(3)
   </tbody>
 </table>
 </div>
+
+We have created some features, but we don't know how useful it will be. We will check their influence at the time of creating Models.
+
+Also note that ratio features like balance_salary_ratio, creditscore_age_ratio, etc may create multi-collinearity.
+
+Note: It has been stated that multi-collinearity is not an issue when using sckit-learn models. [Source](https://www.linkedin.com/posts/justmarkham_sklearntips-machinelearning-python-activity-6651812212270788609-lhE1/)
+
+# Data Preprocessing
+
+Preparing data for Model building.! Encoding categorical data and normalizing numerical data.
+
+### Encoding Categorical data: Gender and Geography
+
+```python
+# Encoding Gender
+X_train['Gender'] = X_train['Gender'].apply(lambda x: 1 if x == 'Male' else 0)
+X_cv['Gender'] = X_cv['Gender'].apply(lambda x: 1 if x == 'Male' else 0)
+X_test['Gender'] = X_test['Gender'].apply(lambda x: 1 if x == 'Male' else 0)
+```
+
+
+```python
+# One Hot Encoding - Geography
+from sklearn.preprocessing import OneHotEncoder
+
+# left-to-right column order is alphabetical (France, Germany, Spain)
+ohe = OneHotEncoder(sparse=False)
+X_train_geo_ohe = pd.DataFrame(ohe.fit_transform(X_train[['Geography']]),columns = ['France', 'Germany', 'Spain'])
+X_cv_geo_ohe = pd.DataFrame(ohe.transform(X_cv[['Geography']]),columns = ['France', 'Germany', 'Spain'])
+X_test_geo_ohe = pd.DataFrame(ohe.transform(X_test[['Geography']]),columns = ['France', 'Germany', 'Spain'])
+
+# drop the Geography column
+X_train.drop('Geography',axis=1,inplace = True)
+X_cv.drop('Geography',axis=1,inplace = True)
+X_test.drop('Geography',axis=1,inplace = True)
+
+# Concat the One Hot encoded columns
+X_train = pd.concat([X_train, X_train_geo_ohe],axis = 1)
+X_cv = pd.concat([X_cv, X_cv_geo_ohe],axis = 1)
+X_test = pd.concat([X_test, X_test_geo_ohe],axis = 1)
+
+```
+### Data Standardization
+
+Each feature is of different scales/units. Features like Salary and Balance have higher range of values compared to Age, Tenure. We need to standardise features before feeding them into our Models. 
+
+
+```python
+from sklearn.preprocessing import StandardScaler
+# features to standardise
+cols_norm = ['CreditScore','Age','Tenure','Balance','NumOfProducts','EstimatedSalary','balance_salary_ratio',
+            'creditscore_age_ratio','creditscore_age_ratio_log','tenure_age_ratio']
+
+sc = StandardScaler()
+sc.fit(X_train[cols_norm]) # fit has to happen only on train set
+
+X_train[cols_norm] = sc.transform(X_train[cols_norm])
+X_cv[cols_norm] = sc.transform(X_cv[cols_norm])
+X_test[cols_norm] = sc.transform(X_test[cols_norm])
+
+print("Standardized!")
+X_train.head()
+```
+
+    Standardized!
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CreditScore</th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Tenure</th>
+      <th>Balance</th>
+      <th>NumOfProducts</th>
+      <th>HasCrCard</th>
+      <th>IsActiveMember</th>
+      <th>EstimatedSalary</th>
+      <th>balance_salary_ratio</th>
+      <th>...</th>
+      <th>creditscore_age_ratio_log</th>
+      <th>Better_Age_Credit</th>
+      <th>Better_Age_Credit_Active</th>
+      <th>multi_products</th>
+      <th>Valuable_customer</th>
+      <th>tenure_age_ratio</th>
+      <th>high_salary_age</th>
+      <th>France</th>
+      <th>Germany</th>
+      <th>Spain</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-0.096527</td>
+      <td>1</td>
+      <td>0.391810</td>
+      <td>1.381609</td>
+      <td>1.564581</td>
+      <td>-0.916511</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1.582574</td>
+      <td>-0.102290</td>
+      <td>...</td>
+      <td>-0.454739</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.796859</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2.073553</td>
+      <td>0</td>
+      <td>-1.421268</td>
+      <td>0.340032</td>
+      <td>-1.214234</td>
+      <td>0.794595</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-1.516191</td>
+      <td>-0.154434</td>
+      <td>...</td>
+      <td>2.415625</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.252449</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-1.605248</td>
+      <td>0</td>
+      <td>-0.085316</td>
+      <td>0.687224</td>
+      <td>1.604206</td>
+      <td>-0.916511</td>
+      <td>1</td>
+      <td>0</td>
+      <td>-1.047270</td>
+      <td>0.097683</td>
+      <td>...</td>
+      <td>-0.902781</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.515969</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.957512</td>
+      <td>1</td>
+      <td>-0.562442</td>
+      <td>0.340032</td>
+      <td>-1.214234</td>
+      <td>0.794595</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-1.073985</td>
+      <td>-0.154434</td>
+      <td>...</td>
+      <td>0.911297</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.489188</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.213485</td>
+      <td>1</td>
+      <td>-1.325843</td>
+      <td>0.687224</td>
+      <td>-1.214234</td>
+      <td>0.794595</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.775142</td>
+      <td>-0.154434</td>
+      <td>...</td>
+      <td>1.492579</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.588283</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 22 columns</p>
+</div>
+
+
+    
+    
 
 
 
