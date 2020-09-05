@@ -38,6 +38,5 @@ To run the app in local:
               (base) C:\Users\aravind\Desktop\Telecom_churn>conda activate churn_env
               (bank_env) C:\Users\aravind\Desktop\Telecom_churn>streamlit run app.py
 # App Demo
-<img src="https://github.com/imAravindR/Telecom_churn/blob/master/streamlit-app-2020-09-04-19-09-75.webm.gif">
-
+<img src="{{ site.url }}{{ site.baseurl }}/images/streamkitapp/streamlit-app-2020-09-04-19-09-75.webm.gif" alt="app demo">
      
