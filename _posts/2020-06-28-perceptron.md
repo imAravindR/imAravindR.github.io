@@ -382,4 +382,4 @@ fig.show()
 fig.write_html(fig, file='pie_chart.html', auto_open=True)
 
 ```
-![](https://github.com/imAravindR/imAravindR.github.io/tree/master/images/pie_chart.png)
+![](/pie_chart.png)
