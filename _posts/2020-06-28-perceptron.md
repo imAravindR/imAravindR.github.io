@@ -191,20 +191,20 @@ The data has 10000 rows and columns. Let's see the data description.
 
 ## Data Description
 
-1. RowNumber: Just a index number assigned to each row. Type : int64
-2. CustomerId: Id of each customer of the bank. Type : int64
-3. Surname: Surname of the customer. Type : Object
-4. CreditScore: The measure of an individual's ability to payback the borrowed amount. Higher it is the better. Type : int64
-5. Geography: Country of the customer. Type : Object. Values: [France, Germany, Spain]
-6. Gender: Customer's gender. Type : Object. Values: [Male / Female]
-7. Age: Age of the customer. Type : int64
-8. Tenure: Duration for which the loan amount is sanctioned.Assuming it to be in years Type : int64
-9. Balance: The amount of money the customer has available in his account. Type: int64
-10. NumOfProducts: How many accounts, bank account affiliated products the person has. Type: int64
-11. HasCrCard: whether the person holds a credit card or not. 1 means he/she has a credit card and 0 means he/she doesn't. Type: int64
-12. IsActiveMember: Whether the customer is actively using the account. However, the values are subjective. Type: int64
-13. EstimatedSalary: The person's approximate salary. Type: float64
-14. Exited: Whether the customer has left the bank or not. 1 means he/she left and 0 means he/she didn't. Type: int64
+    1. RowNumber: Just a index number assigned to each row. Type : int64
+    2. CustomerId: Id of each customer of the bank. Type : int64
+    3. Surname: Surname of the customer. Type : Object
+    4. CreditScore: The measure of an individual's ability to payback the borrowed amount. Higher it is the better. Type : int64
+    5. Geography: Country of the customer. Type : Object. Values: [France, Germany, Spain]
+    6. Gender: Customer's gender. Type : Object. Values: [Male / Female]
+    7. Age: Age of the customer. Type : int64
+    8. Tenure: Duration for which the loan amount is sanctioned.Assuming it to be in years Type : int64
+    9. Balance: The amount of money the customer has available in his account. Type: int64
+    10. NumOfProducts: How many accounts, bank account affiliated products the person has. Type: int64
+    11. HasCrCard: whether the person holds a credit card or not. 1 means he/she has a credit card and 0 means he/she doesn't. Type: int64
+    12. IsActiveMember: Whether the customer is actively using the account. However, the values are subjective. Type: int64
+    13. EstimatedSalary: The person's approximate salary. Type: float64
+    14. Exited: Whether the customer has left the bank or not. 1 means he/she left and 0 means he/she didn't. Type: int64
 
 From the above, we will not require RowNumber, CustomerId, and Surname are related to individuals.
 
@@ -380,7 +380,7 @@ fig.update_layout(
     title_text="Ratio of Customer Churned and Retained")
 fig.show()
 ```
-
+[](https://github.com/imAravindR/imAravindR.github.io/tree/master/images/perceptron/pie_chart.html)
 
 
 
