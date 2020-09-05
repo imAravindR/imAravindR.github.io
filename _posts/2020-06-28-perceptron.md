@@ -382,4 +382,4 @@ fig.show()
 fig.write_html(fig, file='pie_chart.html', auto_open=True)
 
 ```
-<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/pie_chart.html" alt="linearly separable data">
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/pie_chart.png" alt="Pie Chart">
