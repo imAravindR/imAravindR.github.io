@@ -635,160 +635,53 @@ X_train.head()
 
     Standardized!
 
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>CreditScore</th>
-      <th>Gender</th>
-      <th>Age</th>
-      <th>Tenure</th>
-      <th>Balance</th>
-      <th>NumOfProducts</th>
-      <th>HasCrCard</th>
-      <th>IsActiveMember</th>
-      <th>EstimatedSalary</th>
-      <th>balance_salary_ratio</th>
-      <th>...</th>
-      <th>creditscore_age_ratio_log</th>
-      <th>Better_Age_Credit</th>
-      <th>Better_Age_Credit_Active</th>
-      <th>multi_products</th>
-      <th>Valuable_customer</th>
-      <th>tenure_age_ratio</th>
-      <th>high_salary_age</th>
-      <th>France</th>
-      <th>Germany</th>
-      <th>Spain</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>-0.096527</td>
-      <td>1</td>
-      <td>0.391810</td>
-      <td>1.381609</td>
-      <td>1.564581</td>
-      <td>-0.916511</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1.582574</td>
-      <td>-0.102290</td>
-      <td>...</td>
-      <td>-0.454739</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0.796859</td>
-      <td>0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2.073553</td>
-      <td>0</td>
-      <td>-1.421268</td>
-      <td>0.340032</td>
-      <td>-1.214234</td>
-      <td>0.794595</td>
-      <td>1</td>
-      <td>1</td>
-      <td>-1.516191</td>
-      <td>-0.154434</td>
-      <td>...</td>
-      <td>2.415625</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1.252449</td>
-      <td>0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>-1.605248</td>
-      <td>0</td>
-      <td>-0.085316</td>
-      <td>0.687224</td>
-      <td>1.604206</td>
-      <td>-0.916511</td>
-      <td>1</td>
-      <td>0</td>
-      <td>-1.047270</td>
-      <td>0.097683</td>
-      <td>...</td>
-      <td>-0.902781</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0.515969</td>
-      <td>0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.957512</td>
-      <td>1</td>
-      <td>-0.562442</td>
-      <td>0.340032</td>
-      <td>-1.214234</td>
-      <td>0.794595</td>
-      <td>0</td>
-      <td>0</td>
-      <td>-1.073985</td>
-      <td>-0.154434</td>
-      <td>...</td>
-      <td>0.911297</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0.489188</td>
-      <td>0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.213485</td>
-      <td>1</td>
-      <td>-1.325843</td>
-      <td>0.687224</td>
-      <td>-1.214234</td>
-      <td>0.794595</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0.775142</td>
-      <td>-0.154434</td>
-      <td>...</td>
-      <td>1.492579</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1.588283</td>
-      <td>1</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 22 columns</p>
-</div>
+# Model 
 
+We will try multiple types of algorithms for this data.
+
+  1. Logistic Regression
+  2. XGBoost
+  3. XGBoost with SMOTE Oversampling
+
+## Logistic Regression
+
+We will use sklearn's Logistic Regression with Hyperparameter Tuning
+
+```
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_auc_score
+from tqdm import tqdm
+train_auc = []
+cv_auc = []
+C_list = [0.0001, 0.001 ,0.01 ,0.1, 1, 10, 100, 1000] # list of various inverse of lambda values we want to compare.
+for i in tqdm(C_list): # for each values of C_list (i)
+    lr = LogisticRegression(C=i,class_weight='balanced', random_state=17, solver = 'liblinear') # initialize Logistic Model with C = i
+    lr.fit(X_train, y_train) # fit the lr model on the train data
+    y_train_pred = batch_predict(lr, X_train) # Predict on the train data    
+    y_cv_pred = batch_predict(lr, X_cv) # Predict on cross validation data
+    # roc_auc_score(y_true, y_score) the 2nd parameter should be probability estimates of the positive class
+    # not the predicted outputs        
+    train_auc.append(roc_auc_score(y_train,y_train_pred))
+    cv_auc.append(roc_auc_score(y_cv, y_cv_pred))
+
+plt.plot(C_list, train_auc, label='Train AUC')
+plt.plot(C_list, cv_auc, label='CV AUC')
+plt.xscale('log') # change the scale of x axis
+plt.autoscale(True)
+plt.scatter(C_list, train_auc, label='Train AUC points')
+plt.scatter(C_list, cv_auc, label='CV AUC points')
+plt.xscale('log')
+plt.legend()
+plt.xlabel("C: hyperparameter")
+plt.ylabel("AUC")
+plt.title("ERROR PLOTS")
+plt.grid()
+plt.show()
+```
+
+    100%|██████████| 8/8 [00:00<00:00, 16.11it/s]
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_53_1.png" alt="LR">
 
     
     
