@@ -404,16 +404,6 @@ print("test dimensions: ",X_test.shape, y_test.shape)
 
 
 ```python
-# Balance and Salary Ratio
-X_train['balance_salary_ratio'] = X_train['Balance'] / X_train['EstimatedSalary']
-X_cv['balance_salary_ratio'] = X_cv['Balance'] / X_cv['EstimatedSalary']
-X_test['balance_salary_ratio'] = X_test['Balance'] / X_test['EstimatedSalary']
-
-# Does he have balance or not
-X_train['balance_or_not'] = [0 if i == 0.0 else 1 for i in X_train['Balance']]
-X_cv['balance_or_not'] = [0 if i == 0.0 else 1 for i in X_cv['Balance']]
-X_test['balance_or_not'] = [0 if i == 0.0 else 1 for i in X_test['Balance']]
-
 # CreditScore and Age -- if a young man has a high credit score?
 X_train['creditscore_age_ratio'] = X_train['CreditScore'] / X_train['Age']
 X_cv['creditscore_age_ratio'] = X_cv['CreditScore'] / X_cv['Age']
@@ -427,35 +417,9 @@ X_test['creditscore_age_ratio_log'] = np.log10(X_test['creditscore_age_ratio'])
 # Given his/her age does he/she have a better credit score
 mean_age = np.mean(X_train['Age']) # use mean of train data for cv and test set
 mean_credit = np.mean(X_train['CreditScore']) # use mean of train data for cv and test set
-
-X_train['Better_Age_Credit'] = [1 if ((i < mean_age) and (j > mean_credit)) else 0 for i,j in zip(X_train['Age'],X_train['CreditScore'])]
-X_cv['Better_Age_Credit'] = [1 if ((i < mean_age) and (j > mean_credit)) else 0 for i,j in zip(X_cv['Age'],X_cv['CreditScore'])]
-X_test['Better_Age_Credit'] = [1 if ((i < mean_age) and (j > mean_credit)) else 0 for i,j in zip(X_test['Age'],X_test['CreditScore'])]
-
-
-# does the customer hold a better age to credit ratio and an active customer
-X_train['Better_Age_Credit_Active'] = [1 if ((i == 1) and (j == 1)) else 0 for i,j in zip(X_train['Better_Age_Credit'],X_train['IsActiveMember'])]
-X_cv['Better_Age_Credit_Active'] = [1 if ((i == 1) and (j == 1)) else 0 for i,j in zip(X_cv['Better_Age_Credit'],X_cv['IsActiveMember'])]
-X_test['Better_Age_Credit_Active'] = [1 if ((i == 1) and (j == 1)) else 0 for i,j in zip(X_test['Better_Age_Credit'],X_test['IsActiveMember'])]
-
-
-# does he have multiple products
-X_train['multi_products'] = [1 if i > 1 else 0 for i in X_train['NumOfProducts']]
-X_cv['multi_products'] = [1 if i > 1 else 0 for i in X_cv['NumOfProducts']]
-X_test['multi_products'] = [1 if i > 1 else 0 for i in X_test['NumOfProducts']]
-
-# valuable customer? Better_Age_Credit and having more than 1 product?
-mode_products = X_train['NumOfProducts'].mode()[0] # mode of train set 
-
-X_train['Valuable_customer'] = [1 if ((i == 1) and (j > mode_products)) else 0  for i,j in zip(X_train['Better_Age_Credit_Active'],X_train['NumOfProducts'])]
-X_cv['Valuable_customer'] = [1 if ((i == 1) and (j > mode_products)) else 0  for i,j in zip(X_cv['Better_Age_Credit_Active'],X_cv['NumOfProducts'])]
-X_test['Valuable_customer'] = [1 if ((i == 1) and (j > mode_products)) else 0  for i,j in zip(X_test['Better_Age_Credit_Active'],X_test['NumOfProducts'])]
-
-# Tenure and Age -- is he there from his/her young age?
-X_train['tenure_age_ratio'] = X_train['Tenure'] / X_train['Age']
-X_cv['tenure_age_ratio'] = X_cv['Tenure'] / X_cv['Age']
-X_test['tenure_age_ratio'] = X_test['Tenure'] / X_test['Age']
-
+.
+.
+.
 # higher salary compared to his/her age?
 mean_salary = np.mean(X_train['EstimatedSalary']) # mean sestimated alary of train set
 X_train['high_salary_age'] = [1 if (i > mean_salary and j < mean_age) else 0 for i,j in zip(X_train['EstimatedSalary'],X_train['Age'])]
@@ -851,3 +815,41 @@ From the absolute weights we can see features like 'multi_products','creditscore
 So feature engineering has helped alot.
 
 Let's drop the least important features and build the model again.
+From the absolute weights we can see features like 'multi_products','creditscore_age_ratio_log','NumOfProducts','Germany', 'IsActiveMember' are most important and features like 'HasCrCard','Balance', and 'balance_salary_ratio' are least important. 
+
+So feature engineering has helped alot.
+
+Let's drop the least important features and build the model again.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_58_0.png" alt="LR2 Test">
+
+    Logistic Regression - Test AUC:  0.8359900732782088
+    
+Now lets predict on test data with best threshold and see the confusion matrix.
+
+
+    The maximum value of tpr*(1-fpr) 0.5908667088827037 for threshold 0.488
+    
+    Confusion matrix: Train data
+    
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_63_1.png" alt="LR2 CM">
+
+```python
+## Classification report
+from sklearn.metrics import classification_report
+cr = classification_report(y_test,predict_with_best_t(y_test_pred, best_t))
+print(cr)
+```
+
+                  precision    recall  f1-score   support
+    
+               0       0.93      0.76      0.84      1593
+               1       0.45      0.76      0.57       407
+    
+        accuracy                           0.76      2000
+       macro avg       0.69      0.76      0.70      2000
+    weighted avg       0.83      0.76      0.78      2000
+    
+    
+
