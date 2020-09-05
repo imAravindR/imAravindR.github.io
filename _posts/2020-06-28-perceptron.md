@@ -363,7 +363,7 @@ Even though the gap is not very high yet the Customers with high account balance
 cordata = bank_data.corr(method ='pearson')
 cordata.style.background_gradient(cmap='summer')
 ```
-<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/corplot.png" alt="Cor Plot">
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/corplot.PNG" alt="Cor Plot">
 
 
 Age has some correlation (28.5%) with Churn rate. There are no real highly correlated features. NumberOfProducts and Balance are 30.4% Correlated among themselves. Apart from that there are no multi-collinear features which is good.
@@ -568,6 +568,7 @@ X_train.head(3)
     </tr>
   </tbody>
 </table>
+<p>3 rows × 22 columns</p>
 </div>
 
 We have created some features, but we don't know how useful it will be. We will check their influence at the time of creating Models.
@@ -683,8 +684,170 @@ plt.show()
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_53_1.png" alt="LR">
 
+From the above image we can see that at C = 10 the train and cross validation AUC scores are high as well as close to each other. Therefore we can set the optimum C as 10.
+
+After building the Logistic Regression model using C = 10 on train data, we get the AUC scores on train and test as shown below.
     
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_54_0.png" alt="LR Test">
+
+
+    Logistic Regression - Test AUC:  0.836560751814989
+
+## Logistic Regression Feature importances
+
+    > In Logistic Regression when the absolute weights are large then w.T*x is also large. 
+
+    > Weights of the feature indicate their importance. 
     
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Weights</th>
+      <th>Abs_Weights</th>
+      <th>Features</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>15</th>
+      <td>-5.567203</td>
+      <td>5.567203</td>
+      <td>multi_products</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>-2.543284</td>
+      <td>2.543284</td>
+      <td>creditscore_age_ratio_log</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2.352321</td>
+      <td>2.352321</td>
+      <td>NumOfProducts</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>1.474438</td>
+      <td>1.474438</td>
+      <td>Germany</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>-1.005711</td>
+      <td>1.005711</td>
+      <td>IsActiveMember</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>0.949018</td>
+      <td>0.949018</td>
+      <td>CreditScore</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.769292</td>
+      <td>0.769292</td>
+      <td>creditscore_age_ratio</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.733009</td>
+      <td>0.733009</td>
+      <td>Age</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>0.698971</td>
+      <td>0.698971</td>
+      <td>Valuable_customer</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.605773</td>
+      <td>0.605773</td>
+      <td>Gender</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>0.581897</td>
+      <td>0.581897</td>
+      <td>Spain</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>0.533779</td>
+      <td>0.533779</td>
+      <td>France</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>-0.498421</td>
+      <td>0.498421</td>
+      <td>high_salary_age</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>-0.425378</td>
+      <td>0.425378</td>
+      <td>Better_Age_Credit</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>0.339650</td>
+      <td>0.339650</td>
+      <td>tenure_age_ratio</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>-0.323940</td>
+      <td>0.323940</td>
+      <td>Tenure</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.173293</td>
+      <td>0.173293</td>
+      <td>EstimatedSalary</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>-0.154712</td>
+      <td>0.154712</td>
+      <td>Better_Age_Credit_Active</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>-0.092624</td>
+      <td>0.092624</td>
+      <td>balance_or_not</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.023764</td>
+      <td>0.023764</td>
+      <td>balance_salary_ratio</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.010782</td>
+      <td>0.010782</td>
+      <td>Balance</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.002682</td>
+      <td>0.002682</td>
+      <td>HasCrCard</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
+From the absolute weights we can see features like 'multi_products','creditscore_age_ratio_log','NumOfProducts','Germany', 'IsActiveMember' are most important and features like 'HasCrCard','Balance', and 'balance_salary_ratio' are least important. 
 
+So feature engineering has helped alot.
 
+Let's drop the least important features and build the model again.
