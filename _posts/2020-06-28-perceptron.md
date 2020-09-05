@@ -888,6 +888,64 @@ After building the XGBoost classifier using best_n_estimator = 500 & best_l_rate
     
 <img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_74_1.png" alt="XGB1 CM">
 
+    ## Classification report -- XGBoost Model
+    XGBoost Model:
+                   precision    recall  f1-score   support
+    
+               0       0.92      0.84      0.88      1593
+               1       0.53      0.71      0.61       407
+    
+        accuracy                           0.81      2000
+       macro avg       0.72      0.78      0.74      2000
+    weighted avg       0.84      0.81      0.82      2000
+    
 
+## Model with oversampling -- SMOTE Sampling
+```python
+from imblearn.over_sampling import SMOTE # run "conda install -c conda-forge imbalanced-learn" in anaconda promt
+sm  = SMOTE(random_state=17)
+X_train_sm,y_train_sm = sm.fit_sample(X_train,y_train)
+print(X_train_sm.shape,y_train_sm.shape)
+```
 
+    (10192, 22) (10192,)
 
+Repeating the same XGBoost model building process with Oversampled data, we get:
+
+    The maximum value of tpr*(1-fpr) 0.7712574380374055 for threshold 0.466
+    
+    Confusion matrix: Test data
+    
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_85_1.png" alt="XGB2 CM">
+
+    ## Classification report -- XGBoost Model with SMOTE data
+    XGBoost Model:
+                       precision    recall  f1-score   support
+
+                   0       0.92      0.84      0.88      1593
+                   1       0.53      0.70      0.61       407
+
+            accuracy                           0.81      2000
+           macro avg       0.73      0.77      0.74      2000
+        weighted avg       0.84      0.81      0.82      2000
+    
+We can still improve the scores by adding/removing some more features or trying out other algorithms.
+
+## XGBoost Feature importance
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/feature_imp.png" alt="XGB2 Feature imp">
+
+We can see that features like isActiveMember, NumofProducts & Age have major contributions towards the prediction.
+
+# Summary
+
+    +---------------------------+-----------------------------------------+--------------------+
+    |           Model           |             Hyper parameter             |   Auc on testset   |
+    +---------------------------+-----------------------------------------+--------------------+
+    |    Logistic Regression    |              1/λ or C = 10              | 0.8359900732782088 |
+    |          XGBoost          | n_estimator = 500, learning_rate = 0.01 | 0.8581987226055022 |
+    | XGBoost With Oversampling | n_estimator = 300, learning_rate = 0.01 | 0.8530649293361158 |
+    +---------------------------+-----------------------------------------+--------------------+
+    
+You can find full code [here](https://github.com/imAravindR/Bank_Churn)
+ 
