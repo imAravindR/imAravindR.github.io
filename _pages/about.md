@@ -7,7 +7,8 @@ header:
 
 As a Data Scientist, I help discover the information hidden in vast amounts of data and also help make smarter decisions to deliver top notch products. I specialize in machine learning & deep learning techniques. I love working together, so feel free to reach out for collaboration!
 
-## SKILLS AND TOOLS
+
+## Skill & Tools
 
 **Python -** 
 
@@ -53,7 +54,9 @@ As a Data Scientist, I help discover the information hidden in vast amounts of d
 
 > Flask, AWS, Git/GitHub, Docker, Streamlit.
 
-# PROFESSIONAL EXPERIENCE
+
+
+# Professional Experience
 
 ### Data Scientist R&D, NTT Data Services - [July 2018 – Present]
 
@@ -71,7 +74,10 @@ As a Data Scientist, I help discover the information hidden in vast amounts of d
 
 > Proposed for a Patent on Bot Monitoring System to the international patent board of the company in Tokyo.
 
+
+
 # Certifications
+
 > Pursuing Applied AI course.
 
 > Certified ‘Git and GitHub’, 365Datascience.com, ’20.
