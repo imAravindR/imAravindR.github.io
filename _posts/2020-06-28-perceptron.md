@@ -3,7 +3,7 @@ title: "Customer Churn Prediction"
 date: 2020-06-28
 tags: [machine learning, data science, eda, streamlit]
 header:
-  image: "/images/perceptron/percept.jpg"
+  image: "/images/perceptron/Customer_Churn.png"
 excerpt: "Machine Learning, Data Science, EDA"
 mathjax: "true"
 ---
