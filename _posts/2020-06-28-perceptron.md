@@ -154,7 +154,58 @@ bank_data.head()
 </div>
 
 
+```python
+# Dimensions
+print("Number of Rows: {} \nNumber of Columns: {}".format(bank_data.shape[0],bank_data.shape[1]))
+```
 
+    Number of Rows: 10000 
+    Number of Columns: 14
+    
+```python
+# data types, missing values and number of uniques
+bank_data_info = pd.concat([pd.DataFrame(bank_data.dtypes),pd.DataFrame(bank_data.isnull().sum()),pd.DataFrame(bank_data.nunique())],axis = 1)
+bank_data_info.columns = ['DataType','# missing rows','# Unique values']
+print(bank_data_info)
+del bank_data_info
+
+```
+                    DataType  # missing rows  # Unique values
+    RowNumber          int64               0            10000
+    CustomerId         int64               0            10000
+    Surname           object               0             2932
+    CreditScore        int64               0              460
+    Geography         object               0                3
+    Gender            object               0                2
+    Age                int64               0               70
+    Tenure             int64               0               11
+    Balance          float64               0             6382
+    NumOfProducts      int64               0                4
+    HasCrCard          int64               0                2
+    IsActiveMember     int64               0                2
+    EstimatedSalary  float64               0             9999
+    Exited             int64               0                2
+    
+The data has 10000 rows and columns. Let's see the data description.
+
+## Data Description
+
+1. RowNumber: Just a index number assigned to each row. Type : int64
+2. CustomerId: Id of each customer of the bank. Type : int64
+3. Surname: Surname of the customer. Type : Object
+4. CreditScore: The measure of an individual's ability to payback the borrowed amount. Higher it is the better. Type : int64
+5. Geography: Country of the customer. Type : Object. Values: [France, Germany, Spain]
+6. Gender: Customer's gender. Type : Object. Values: [Male / Female]
+7. Age: Age of the customer. Type : int64
+8. Tenure: Duration for which the loan amount is sanctioned.Assuming it to be in years Type : int64
+9. Balance: The amount of money the customer has available in his account. Type: int64
+10. NumOfProducts: How many accounts, bank account affiliated products the person has. Type: int64
+11. HasCrCard: whether the person holds a credit card or not. 1 means he/she has a credit card and 0 means he/she doesn't. Type: int64
+12. IsActiveMember: Whether the customer is actively using the account. However, the values are subjective. Type: int64
+13. EstimatedSalary: The person's approximate salary. Type: float64
+14. Exited: Whether the customer has left the bank or not. 1 means he/she left and 0 means he/she didn't. Type: int64
+
+From the above, we will not require RowNumber, CustomerId, and Surname are related to individuals.
 
 
 
