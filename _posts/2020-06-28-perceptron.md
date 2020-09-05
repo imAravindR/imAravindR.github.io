@@ -380,7 +380,7 @@ fig.update_layout(
     title_text="Ratio of Customer Churned and Retained")
 fig.show()
 ```
-![](/images/perceptron/pie_chart.html)
+{% include pie_chart.html %}
 
 
 
