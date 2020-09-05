@@ -71,3 +71,11 @@ As a Data Scientist, I help discover the information hidden in vast amounts of d
 
 > Proposed for a Patent on Bot Monitoring System to the international patent board of the company in Tokyo.
 
+# Certifications
+> Pursuing Applied AI course.
+> Certified ‘Git and GitHub’, 365Datascience.com, ’20.
+> Certified ‘Machine Learning with Tree Based Models using Python’, DataCamp, ’19.
+> Certified ‘Deep Learning With Pytorch’, DataCamp, ’19.
+> Certified ‘Pyspark’, DataCamp, ’19.
+> Certified ‘Data Science’, Institute of Analytics, ’18.
+
