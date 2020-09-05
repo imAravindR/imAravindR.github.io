@@ -9,11 +9,15 @@ As a Data Scientist, I help discover the information hidden in vast amounts of d
 
 ## SKILLS AND TOOLS
 
-**Python -** Numpy, Pandas, Sckit-Learn, Keras, TensorFlow, Pytorch, MatPlotLib, Seaborn, Plotly, OpenCV, H2O AI, etc.
+**Python -** 
 
-**R -** Data types, Machine learning models, Visualization (GG-Plot)
+	> Numpy, Pandas, Sckit-Learn, Keras, TensorFlow, Pytorch, MatPlotLib, Seaborn, Plotly, OpenCV, H2O AI, etc.
 
-**Machine Learning – **
+**R -** 
+
+	> Data types, Machine learning models, Visualization (GG-Plot)
+
+**Machine Learning –**
 
 	> **Supervised:** Regression, Classification (Random Forest, KNN, Naïve Bayes, XGBoost, LightGBM, CatBoost, etc.)
 	
@@ -29,15 +33,25 @@ As a Data Scientist, I help discover the information hidden in vast amounts of d
 
 	> NLTK, Spacy, TM (R), Text mining, Regular Expressions, Sentiment Analysis, Text Classification, Chat-Bots, Topic Modeling, etc.
 	
-**Data Base Tool (SQL) –** Selecting Columns, Filtering rows, Sorting, Grouping, Joins, and Data base connection, etc.
+**Data Base Tool (SQL) –** 
 
-**Spark -** Spark Context, RDD’s, Pyspark SQL and Data frames, Visualization, ML-lib
+	> Selecting Columns, Filtering rows, Sorting, Grouping, Joins, and Data base connection, etc.
 
-**Tableau | Power BI -** Charts, Maps, Scatterplots, Time Series, Aggregation, and Filter
+**Spark -** 
+
+	> Spark Context, RDD’s, Pyspark SQL and Data frames, Visualization, ML-lib
+
+**Tableau | Power BI -** 
+
+	> Charts, Maps, Scatterplots, Time Series, Aggregation, and Filter
 
 **Git | GitHub**
 
-**Microsoft Office –** Excel, PowerPoint, etc.
+**Microsoft Office –** 
 
-**Deployment –** Flask, AWS, Docker, Streamlit.
+	> Excel, PowerPoint, etc.
+
+**Deployment –** 
+
+	> Flask, AWS, Docker, Streamlit.
 
