@@ -332,22 +332,6 @@ With respect to Tenure, Customers repaying loans in less years or taking more ti
 
 
 ### Balance
-```python
-y0 = bank_data.Balance[bank_data.Exited == 0].values
-y1 = bank_data.Balance[bank_data.Exited == 1].values
-
-fig = go.Figure()
-fig.add_trace(go.Box(y=y0, name='Continued',
-                marker_color = 'blue'))
-fig.add_trace(go.Box(y=y1, name = 'Exited',
-                marker_color = 'red'))
-
-fig.update_layout(
-    yaxis_title='Balance'
-)
-
-fig.show()
-```
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/balance.png" alt="Balance">
 
@@ -357,7 +341,6 @@ Even though the gap is not very high yet the Customers with high account balance
 
 
 ## Correlation check!
-
 
 ```python
 cordata = bank_data.corr(method ='pearson')
@@ -389,7 +372,6 @@ X_train = X_train.reset_index(drop = True)
 X_cv = X_cv.reset_index(drop = True)
 X_test = X_test.reset_index(drop = True)
 
-
 print("train dimensions: ",X_train.shape, y_train.shape)
 print("cv dimensions: ",X_cv.shape, y_cv.shape)
 print("test dimensions: ",X_test.shape, y_test.shape)
@@ -417,6 +399,7 @@ X_test['creditscore_age_ratio_log'] = np.log10(X_test['creditscore_age_ratio'])
 # Given his/her age does he/she have a better credit score
 mean_age = np.mean(X_train['Age']) # use mean of train data for cv and test set
 mean_credit = np.mean(X_train['CreditScore']) # use mean of train data for cv and test set
+.
 .
 .
 .
@@ -852,4 +835,59 @@ print(cr)
     weighted avg       0.83      0.76      0.78      2000
     
     
+## XGBoost Model
+XGBoost documentation - [Here](https://xgboost.readthedocs.io/en/latest/)
+
+XGboost tutorial - [Here](https://xgboost.readthedocs.io/en/latest/tutorials/model.html)
+
+```python
+import xgboost as xgb
+
+train_auc = []
+cv_auc = []
+n_trees = [50,100,200,300,500,750,1000] # list of various n_estimator values we want to compare.
+l_rate = [0.0001,0.001,0.01,0.1,1.0,10] # list of various learning rate values we want to compare.
+
+hyperparams = [(n,l) for n in n_trees for l in l_rate]
+hyperparameter_indices = uniform_random_sample(0,len(hyperparams),size = 15)
+params_list = [hyperparams[i] for i in hyperparameter_indices]
+n_trees_ls = [i[0] for i in params_list]
+l_rate_ls = [i[1] for i in params_list]
+
+for i in tqdm(params_list):
+    # initialize XGBoost Model with n_estimators = i[0] and learning_rate = i[1]
+    xg = xgb.XGBClassifier(n_estimators=i[0],learning_rate=i[1],random_state = 17) 
+    xg.fit(X_train, y_train) # fit the Xgboost model on the train data
+    y_train_pred = batch_predict(xg, X_train) # Predict on the train data    
+    y_cv_pred = batch_predict(xg, X_cv) # Predict on cross validation data
+    # roc_auc_score(y_true, y_score) the 2nd parameter should be probability estimates of the positive class
+    # not the predicted outputs        
+    train_auc.append(roc_auc_score(y_train,y_train_pred))
+    cv_auc.append(roc_auc_score(y_cv, y_cv_pred))
+```
+
+    100%|██████████| 15/15 [00:48<00:00,  3.20s/it]
+    
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/xgb1.png" alt="XGB 1">
+
+From the above plot we can see the best set of parameters are best_n_estimator = 500 & best_l_rate = 0.01
+
+After building the XGBoost classifier using best_n_estimator = 500 & best_l_rate = 0.01, we get Train and Test AUC scores as follows:
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_71_0.png" alt="XGB1 AUC">
+
+
+    XGBoost --> Train AUC:  0.9399423702940356
+    XGBoost --> Test AUC:  0.8581987226055022
+
+## Confusion Matrix -- XGBoost Model
+
+    The maximum value of tpr*(1-fpr) 0.7502817077751346 for threshold 0.224
+    
+    Confusion matrix: Test data
+    
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_74_1.png" alt="XGB1 CM">
+
+
+
 
