@@ -400,21 +400,20 @@ print("Male - Exited: ",len(bank_data[(bank_data['Exited'] == 1) & (bank_data['G
 print("Male - Retained: ",len(bank_data[(bank_data['Exited'] == 0) & (bank_data['Gender'] == 'Male')]))
 ```
 
-            Exited
-  Gender          
-  Female  0.250715
-  Male    0.164559
+              Exited
+    Gender          
+    Female  0.250715
+    Male    0.164559
 
-  Female - Exited:  1139
-  Female - Retained:  3404
+    Female - Exited:  1139
+    Female - Retained:  3404
 
-  Male - Exited:  898
-  Male - Retained:  4559
+    Male - Exited:  898
+    Male - Retained:  4559
     
 
-
+### Gender,HasCrCard,IsActiveMember vs Churn
 ```python
-# Gender,HasCrCard,IsActiveMember vs Churn
 f,ax=plt.subplots(3,2,figsize=(18,25))
 bank_data[['Gender','Exited']].groupby(['Gender']).mean().plot.bar(ax=ax[0][0])
 ax[0][1].set_title('Churn vs Gender')
@@ -432,3 +431,84 @@ plt.show()
 ```
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_22_0.png" alt="Gender,HasCrCard,IsActiveMember vs Churn">
+
+From the above graphs we can see, 
+
+1. More male customers, but when it comes to churn rate, female customers are more likely to quit the bank. (In other words, even though there are more male customers its the females who have high churn rate compared to males).
+
+2. Majority of customers have credit cards. 
+
+3. The bank have a significant number of inactive customers. They ratio of inactive customers being churned out is high. Thus bank needs to take steps and make them active. 
+
+### Geography vs Churn
+```python
+sns.factorplot(x='Geography',y='Exited', data=bank_data,size=4,aspect=3)
+
+fig, (axis1,axis2,axis3) = plt.subplots(1,3,figsize=(15,5))
+
+
+sns.countplot(x='Geography', data=bank_data, ax=axis1)
+sns.countplot(x='Exited', hue="Geography", data=bank_data, order=[1,0], ax=axis2)
+
+# group by Geography, and get the mean for Churned customers for each value in Geography
+geography_perc = bank_data[["Geography", "Exited"]].groupby(['Geography'],as_index=False).mean()
+geography_perc.columns = ['Geography', 'Mean(Exited)']
+sns.barplot(x='Geography', y='Mean(Exited)', data=geography_perc,order=['France','Spain','Germany'],ax=axis3)
+del geography_perc
+
+```
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_24_1.png" alt="Geography vs Churn">
+
+The bank have majority of its customers located in France, however the chrun rate is high in Germany followed by spain, where the bank have less number of customers. This can be due to less number of branches in Germany and Spain or poor services in those regions. 
+
+### Age
+```python
+# peaks for Exited/not exited customers by their age
+facet = sns.FacetGrid(bank_data, hue="Exited",aspect=4)
+facet.map(sns.kdeplot,'Age',shade= True)
+facet.set(xlim=(0, bank_data['Age'].max()))
+facet.add_legend()
+
+# average exited customers by age
+fig, axis1 = plt.subplots(1,1,figsize=(18,4))
+average_age = bank_data[["Age", "Exited"]].groupby(['Age'],as_index=False).mean()
+average_age.columns = ['Age','Mean(Exited)']
+sns.barplot(x='Age', y='Mean(Exited)', data=average_age)
+del average_age
+```
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_26_0.png" alt="Peaks for age">
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_26_1.png" alt="average exited age">
+
+Customer having age around 48 to 60 are churning out compared to younger ones i.e., Mean(Exited) > 0.5 from the graph. The churn rate can also be due to retirement. Bank needs to revise the market strategy by focusing on keeping older customers. 
+
+
+```python
+bank_data[(bank_data['Age'] == 56)]['Exited'].value_counts()
+```
+
+1    50
+0    20
+Name: Exited, dtype: int64
+
+Out of 70 people whose age equals 56, 50 of them churned out.
+
+### Tenure
+```python
+y0 = bank_data.Tenure[bank_data.Exited == 0].values
+y1 = bank_data.Tenure[bank_data.Exited == 1].values
+
+fig = go.Figure()
+fig.add_trace(go.Box(y=y0, name='Continued',
+                marker_color = 'lightseagreen'))
+fig.add_trace(go.Box(y=y1, name = 'Exited',
+                marker_color = 'indianred'))
+
+fig.update_layout(
+    yaxis_title='Tenure'
+)
+
+fig.show()
+```
+
