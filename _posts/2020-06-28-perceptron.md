@@ -160,8 +160,8 @@ bank_data.head()
 print("Number of Rows: {} \nNumber of Columns: {}".format(bank_data.shape[0],bank_data.shape[1]))
 ```
 
-    Number of Rows: 10000 
-    Number of Columns: 14
+Number of Rows: 10000 
+Number of Columns: 14
   
   
 ```python
@@ -350,7 +350,7 @@ def reduce_memory(df, verbose=True):
 print("Total memory used before Memory reduction {:5.2f}Mb".format(bank_data.memory_usage().sum() / 1024**2))
 ```
 
-    Total memory used before Memory reduction  0.84Mb
+Total memory used before Memory reduction  0.84Mb
     
 
 
@@ -360,8 +360,8 @@ bank_data = reduce_memory(bank_data)
 print("Total memory used after Memory reduction {:5.2f}Mb".format(bank_data.memory_usage().sum() / 1024**2))
 ```
 
-    Memory usage decreased to  0.31 Mb (63.6% reduction)
-    Total memory used after Memory reduction  0.31Mb
+Memory usage decreased to  0.31 Mb (63.6% reduction)
+Total memory used after Memory reduction  0.31Mb
     
 
 ## Exploratory Data Analysis (EDA)
