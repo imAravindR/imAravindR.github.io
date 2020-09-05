@@ -1,5 +1,5 @@
 ---
-title: "Telecom Churn Prediction App"
+title: "Streamlit APP - Telecom Churn Prediction"
 date: 2020-09-05
 tags: [machine learning, data science, eda, streamlit]
 header:
@@ -10,7 +10,7 @@ mathjax: "true"
 
 App to predict Customer Churn for a Telecom company
 
-The app is hosted on https://telecom-churn-app.herokuapp.com/
+The app is hosted on [https://telecom-churn-app.herokuapp.com/](https://telecom-churn-app.herokuapp.com/)
 
 # Why does a customer leave telecom company? 
 ![](https://growrevenue.io/wp-content/uploads/2019/04/pasted-image-0-28.png)
@@ -45,3 +45,5 @@ To run the app in local:
 <img src="{{ site.url }}{{ site.baseurl }}/images/streamlitapp/screencapture-telecom-churn-app-herokuapp-1.png" alt="app screenshot 1">
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/streamlitapp/screencapture-telecom-churn-app-herokuapp-2.png" alt="app screenshot 2"> 
+
+For full code refer [here](https://github.com/imAravindR/Telecom_churn)
