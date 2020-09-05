@@ -23,17 +23,6 @@ Here, we have a data from kaggle where all the historical information about a cu
 
 Our goal is to use the power of data science to help the bank identify those who are likely to leave the bank in future.
 
-## Load Libraries 
-
-```python
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import os
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
-```
 
 ## Read Data
 ```python
@@ -41,7 +30,6 @@ from sklearn.preprocessing import MinMaxScaler
 bank_data = pd.read_csv('Churn_Modelling.csv')
 bank_data.head()
 ```
-
 <div>
 <table border="1" class="dataframe">
   <thead>
@@ -154,14 +142,13 @@ bank_data.head()
 </div>
 
 
-
 ```python
 # Dimensions
 print("Number of Rows: {} \nNumber of Columns: {}".format(bank_data.shape[0],bank_data.shape[1]))
 ```
 Number of Rows: 10000 
+
 Number of Columns: 14
-  
   
 ```python
 # data types, missing values and number of uniques
@@ -208,141 +195,9 @@ The data has 10000 rows and columns. Let's see the data description.
 
 From the above, we will not require RowNumber, CustomerId, and Surname are related to individuals.
 
-```python
-# drop columns RowNumber, CustomerId, and Surname
-bank_data.drop(["RowNumber", "CustomerId", "Surname"], axis = 1,inplace = True)
-bank_data.tail()
-```
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>CreditScore</th>
-      <th>Geography</th>
-      <th>Gender</th>
-      <th>Age</th>
-      <th>Tenure</th>
-      <th>Balance</th>
-      <th>NumOfProducts</th>
-      <th>HasCrCard</th>
-      <th>IsActiveMember</th>
-      <th>EstimatedSalary</th>
-      <th>Exited</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>9995</th>
-      <td>771</td>
-      <td>France</td>
-      <td>Male</td>
-      <td>39</td>
-      <td>5</td>
-      <td>0.00</td>
-      <td>2</td>
-      <td>1</td>
-      <td>0</td>
-      <td>96270.64</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>9996</th>
-      <td>516</td>
-      <td>France</td>
-      <td>Male</td>
-      <td>35</td>
-      <td>10</td>
-      <td>57369.61</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>101699.77</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>9997</th>
-      <td>709</td>
-      <td>France</td>
-      <td>Female</td>
-      <td>36</td>
-      <td>7</td>
-      <td>0.00</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>42085.58</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>9998</th>
-      <td>772</td>
-      <td>Germany</td>
-      <td>Male</td>
-      <td>42</td>
-      <td>3</td>
-      <td>75075.31</td>
-      <td>2</td>
-      <td>1</td>
-      <td>0</td>
-      <td>92888.52</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>9999</th>
-      <td>792</td>
-      <td>France</td>
-      <td>Female</td>
-      <td>28</td>
-      <td>4</td>
-      <td>130142.79</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>38190.78</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-</div> 
 
 ## Memory Handling
 Memory usage in python is a key task. In case of huge datasets memory handling is not easy. It is always a good practice to reduce memory of the data.
-
-
-```python
-# memory reduction
-# credits: The function was taken from https://www.kaggle.com/artgor/brute-force-feature-engineering 
-def reduce_memory(df, verbose=True):
-    """Function to reduce memory size of attributes"""
-    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
-    start_mem = df.memory_usage().sum() / 1024**2    
-    for col in df.columns:
-        col_type = df[col].dtypes
-        if col_type in numerics:
-            c_min = df[col].min()
-            c_max = df[col].max()
-            if str(col_type)[:3] == 'int':
-                if c_min > np.iinfo(np.int8).min and c_max < np.iinfo(np.int8).max:
-                    df[col] = df[col].astype(np.int8)
-                elif c_min > np.iinfo(np.int16).min and c_max < np.iinfo(np.int16).max:
-                    df[col] = df[col].astype(np.int16)
-                elif c_min > np.iinfo(np.int32).min and c_max < np.iinfo(np.int32).max:
-                    df[col] = df[col].astype(np.int32)
-                elif c_min > np.iinfo(np.int64).min and c_max < np.iinfo(np.int64).max:
-                    df[col] = df[col].astype(np.int64)  
-            else:
-                if c_min > np.finfo(np.float16).min and c_max < np.finfo(np.float16).max:
-                    df[col] = df[col].astype(np.float16)
-                elif c_min > np.finfo(np.float32).min and c_max < np.finfo(np.float32).max:
-                    df[col] = df[col].astype(np.float32)
-                else:
-                    df[col] = df[col].astype(np.float64)    
-    end_mem = df.memory_usage().sum() / 1024**2
-    if verbose: print('Memory usage decreased to {:5.2f} Mb ({:.1f}% reduction)'.format(end_mem, 100 * (start_mem - end_mem) / start_mem))
-    return df
-```
-
 
 ```python
 # Before Memory reduction
@@ -351,8 +206,6 @@ print("Total memory used before Memory reduction {:5.2f}Mb".format(bank_data.mem
 
 Total memory used before Memory reduction  0.84Mb
     
-
-
 ```python
 # After Memory reduction
 bank_data = reduce_memory(bank_data)
@@ -365,7 +218,6 @@ Total memory used after Memory reduction  0.31Mb
 
 ## Exploratory Data Analysis (EDA)
 The purpose of EDA is to understand how different variables are related to our target (Exited) variable.
-
 
 ```python
 import plotly.graph_objects as go
@@ -389,28 +241,6 @@ fig.write_html(fig, file='pie_chart.html', auto_open=True)
 
 Who is loyal to the bank? Male or Female?
 
-
-```python
-print(bank_data[['Gender','Exited']].groupby(['Gender']).mean())
-print()
-print("Female - Exited: ",len(bank_data[(bank_data['Exited'] == 1) & (bank_data['Gender'] == 'Female')]))
-print("Female - Retained: ",len(bank_data[(bank_data['Exited'] == 0) & (bank_data['Gender'] == 'Female')]))
-print()
-print("Male - Exited: ",len(bank_data[(bank_data['Exited'] == 1) & (bank_data['Gender'] == 'Male')]))
-print("Male - Retained: ",len(bank_data[(bank_data['Exited'] == 0) & (bank_data['Gender'] == 'Male')]))
-```
-
-              Exited
-    Gender          
-    Female  0.250715
-    Male    0.164559
-
-    Female - Exited:  1139
-    Female - Retained:  3404
-
-    Male - Exited:  898
-    Male - Retained:  4559
-    
 
 ### Gender,HasCrCard,IsActiveMember vs Churn
 ```python
@@ -441,22 +271,7 @@ From the above graphs we can see,
 3. The bank have a significant number of inactive customers. They ratio of inactive customers being churned out is high. Thus bank needs to take steps and make them active. 
 
 ### Geography vs Churn
-```python
-sns.factorplot(x='Geography',y='Exited', data=bank_data,size=4,aspect=3)
 
-fig, (axis1,axis2,axis3) = plt.subplots(1,3,figsize=(15,5))
-
-
-sns.countplot(x='Geography', data=bank_data, ax=axis1)
-sns.countplot(x='Exited', hue="Geography", data=bank_data, order=[1,0], ax=axis2)
-
-# group by Geography, and get the mean for Churned customers for each value in Geography
-geography_perc = bank_data[["Geography", "Exited"]].groupby(['Geography'],as_index=False).mean()
-geography_perc.columns = ['Geography', 'Mean(Exited)']
-sns.barplot(x='Geography', y='Mean(Exited)', data=geography_perc,order=['France','Spain','Germany'],ax=axis3)
-del geography_perc
-
-```
 <img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/output_24_1.png" alt="Geography vs Churn">
 
 The bank have majority of its customers located in France, however the chrun rate is high in Germany followed by spain, where the bank have less number of customers. This can be due to less number of branches in Germany and Spain or poor services in those regions. 
@@ -511,4 +326,27 @@ fig.update_layout(
 
 fig.show()
 ```
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/tenure.png" alt="Tenure">
 
+With respect to Tenure, Customers repaying loans in less years or taking more time to repay loans are churning out. Bank needs to provide benefits for customers who are repaying loans in quick time and for those who have stayed for a long time (High tenure). 
+
+
+### Balance
+```python
+y0 = bank_data.Balance[bank_data.Exited == 0].values
+y1 = bank_data.Balance[bank_data.Exited == 1].values
+
+fig = go.Figure()
+fig.add_trace(go.Box(y=y0, name='Continued',
+                marker_color = 'blue'))
+fig.add_trace(go.Box(y=y1, name = 'Exited',
+                marker_color = 'red'))
+
+fig.update_layout(
+    yaxis_title='Balance'
+)
+
+fig.show()
+```
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/balance.png" alt="Balance">
