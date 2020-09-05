@@ -365,4 +365,209 @@ cordata.style.background_gradient(cmap='summer')
 ```
 <img src="{{ site.url }}{{ site.baseurl }}/images/perceptron/corplot.png" alt="Cor Plot">
 
+Age has some correlation (28.5%) with Churn rate. There are no real highly correlated features. NumberOfProducts and Balance are 30.4% Correlated among themselves. Apart from that there are no multi-collinear features which is good.
+
+Let's try and create some features [feature engineering]. Let's See if we can create more useful features.
+
+# Feature Engineering
+
+One of the most important part in a data science/ml pipeline is the ability to create good features. Feature Engineering is the hard skill and this is where the creativity & knowledge of data scientist/ML practioner is required. 
+
+## Train, Validation and Test Split
+
+Before we create feature we will split the data into Train, CV and Test sets. Otherwise, there will this problem of data leakage. 
+
+```python
+# train cv test split - stratified sampling
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, stratify=y,random_state = 17)
+X_train, X_cv, y_train, y_cv = train_test_split(X_train, y_train, test_size=0.20, stratify=y_train,random_state = 17)
+
+# reset index
+X_train = X_train.reset_index(drop = True)
+X_cv = X_cv.reset_index(drop = True)
+X_test = X_test.reset_index(drop = True)
+
+
+print("train dimensions: ",X_train.shape, y_train.shape)
+print("cv dimensions: ",X_cv.shape, y_cv.shape)
+print("test dimensions: ",X_test.shape, y_test.shape)
+```
+
+    train dimensions:  (6400, 10) (6400,)
+    cv dimensions:  (1600, 10) (1600,)
+    test dimensions:  (2000, 10) (2000,)
+    
+
+**We will create features on train cv and test. Note: fit must only happen on train set.**
+
+
+```python
+# Balance and Salary Ratio
+X_train['balance_salary_ratio'] = X_train['Balance'] / X_train['EstimatedSalary']
+X_cv['balance_salary_ratio'] = X_cv['Balance'] / X_cv['EstimatedSalary']
+X_test['balance_salary_ratio'] = X_test['Balance'] / X_test['EstimatedSalary']
+
+# Does he have balance or not
+X_train['balance_or_not'] = [0 if i == 0.0 else 1 for i in X_train['Balance']]
+X_cv['balance_or_not'] = [0 if i == 0.0 else 1 for i in X_cv['Balance']]
+X_test['balance_or_not'] = [0 if i == 0.0 else 1 for i in X_test['Balance']]
+
+# CreditScore and Age -- if a young man has a high credit score?
+X_train['creditscore_age_ratio'] = X_train['CreditScore'] / X_train['Age']
+X_cv['creditscore_age_ratio'] = X_cv['CreditScore'] / X_cv['Age']
+X_test['creditscore_age_ratio'] = X_test['CreditScore'] / X_test['Age']
+
+# log feature?
+X_train['creditscore_age_ratio_log'] = np.log10(X_train['creditscore_age_ratio'])
+X_cv['creditscore_age_ratio_log'] = np.log10(X_cv['creditscore_age_ratio'])
+X_test['creditscore_age_ratio_log'] = np.log10(X_test['creditscore_age_ratio'])
+
+# Given his/her age does he/she have a better credit score
+mean_age = np.mean(X_train['Age']) # use mean of train data for cv and test set
+mean_credit = np.mean(X_train['CreditScore']) # use mean of train data for cv and test set
+
+X_train['Better_Age_Credit'] = [1 if ((i < mean_age) and (j > mean_credit)) else 0 for i,j in zip(X_train['Age'],X_train['CreditScore'])]
+X_cv['Better_Age_Credit'] = [1 if ((i < mean_age) and (j > mean_credit)) else 0 for i,j in zip(X_cv['Age'],X_cv['CreditScore'])]
+X_test['Better_Age_Credit'] = [1 if ((i < mean_age) and (j > mean_credit)) else 0 for i,j in zip(X_test['Age'],X_test['CreditScore'])]
+
+
+# does the customer hold a better age to credit ratio and an active customer
+X_train['Better_Age_Credit_Active'] = [1 if ((i == 1) and (j == 1)) else 0 for i,j in zip(X_train['Better_Age_Credit'],X_train['IsActiveMember'])]
+X_cv['Better_Age_Credit_Active'] = [1 if ((i == 1) and (j == 1)) else 0 for i,j in zip(X_cv['Better_Age_Credit'],X_cv['IsActiveMember'])]
+X_test['Better_Age_Credit_Active'] = [1 if ((i == 1) and (j == 1)) else 0 for i,j in zip(X_test['Better_Age_Credit'],X_test['IsActiveMember'])]
+
+
+# does he have multiple products
+X_train['multi_products'] = [1 if i > 1 else 0 for i in X_train['NumOfProducts']]
+X_cv['multi_products'] = [1 if i > 1 else 0 for i in X_cv['NumOfProducts']]
+X_test['multi_products'] = [1 if i > 1 else 0 for i in X_test['NumOfProducts']]
+
+# valuable customer? Better_Age_Credit and having more than 1 product?
+mode_products = X_train['NumOfProducts'].mode()[0] # mode of train set 
+
+X_train['Valuable_customer'] = [1 if ((i == 1) and (j > mode_products)) else 0  for i,j in zip(X_train['Better_Age_Credit_Active'],X_train['NumOfProducts'])]
+X_cv['Valuable_customer'] = [1 if ((i == 1) and (j > mode_products)) else 0  for i,j in zip(X_cv['Better_Age_Credit_Active'],X_cv['NumOfProducts'])]
+X_test['Valuable_customer'] = [1 if ((i == 1) and (j > mode_products)) else 0  for i,j in zip(X_test['Better_Age_Credit_Active'],X_test['NumOfProducts'])]
+
+# Tenure and Age -- is he there from his/her young age?
+X_train['tenure_age_ratio'] = X_train['Tenure'] / X_train['Age']
+X_cv['tenure_age_ratio'] = X_cv['Tenure'] / X_cv['Age']
+X_test['tenure_age_ratio'] = X_test['Tenure'] / X_test['Age']
+
+# higher salary compared to his/her age?
+mean_salary = np.mean(X_train['EstimatedSalary']) # mean sestimated alary of train set
+X_train['high_salary_age'] = [1 if (i > mean_salary and j < mean_age) else 0 for i,j in zip(X_train['EstimatedSalary'],X_train['Age'])]
+X_cv['high_salary_age'] = [1 if (i > mean_salary and j < mean_age) else 0 for i,j in zip(X_cv['EstimatedSalary'],X_cv['Age'])]
+X_test['high_salary_age'] = [1 if (i > mean_salary and j < mean_age) else 0 for i,j in zip(X_test['EstimatedSalary'],X_test['Age'])]
+
+print("New features created!")
+X_train.head(3)
+
+```
+
+    New features created!
+    
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CreditScore</th>
+      <th>Geography</th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Tenure</th>
+      <th>Balance</th>
+      <th>NumOfProducts</th>
+      <th>HasCrCard</th>
+      <th>IsActiveMember</th>
+      <th>EstimatedSalary</th>
+      <th>balance_salary_ratio</th>
+      <th>balance_or_not</th>
+      <th>creditscore_age_ratio</th>
+      <th>creditscore_age_ratio_log</th>
+      <th>Better_Age_Credit</th>
+      <th>Better_Age_Credit_Active</th>
+      <th>multi_products</th>
+      <th>Valuable_customer</th>
+      <th>tenure_age_ratio</th>
+      <th>high_salary_age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>640</td>
+      <td>Spain</td>
+      <td>Male</td>
+      <td>43</td>
+      <td>9</td>
+      <td>172478.156250</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>191084.406250</td>
+      <td>0.902628</td>
+      <td>1</td>
+      <td>14.883721</td>
+      <td>1.172712</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.209302</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>850</td>
+      <td>France</td>
+      <td>Female</td>
+      <td>24</td>
+      <td>6</td>
+      <td>0.000000</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>13159.900391</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>35.416667</td>
+      <td>1.549208</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.250000</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>494</td>
+      <td>Germany</td>
+      <td>Female</td>
+      <td>38</td>
+      <td>7</td>
+      <td>174937.640625</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>40084.320312</td>
+      <td>4.364241</td>
+      <td>1</td>
+      <td>13.000000</td>
+      <td>1.113943</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.184211</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
