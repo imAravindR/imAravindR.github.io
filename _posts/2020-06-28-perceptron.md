@@ -469,7 +469,7 @@ X_train.head(3)
 
     New features created!
     
-
+<div>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -635,7 +635,7 @@ X_train.head()
 
     Standardized!
 
-
+<div>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
