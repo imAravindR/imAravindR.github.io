@@ -45,13 +45,11 @@ As a Data Scientist, I help discover the information hidden in vast amounts of d
 
 	> Charts, Maps, Scatterplots, Time Series, Aggregation, and Filter
 
-**Git | GitHub**
-
 **Microsoft Office –** 
 
 	> Excel, PowerPoint, etc.
 
 **Deployment –** 
 
-	> Flask, AWS, Docker, Streamlit.
+	> Flask, AWS, Git | GitHub, Docker, Streamlit.
 
