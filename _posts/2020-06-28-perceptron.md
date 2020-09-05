@@ -154,6 +154,7 @@ bank_data.head()
 </div>
 
 
+
 ```python
 # Dimensions
 print("Number of Rows: {} \nNumber of Columns: {}".format(bank_data.shape[0],bank_data.shape[1]))
@@ -161,7 +162,8 @@ print("Number of Rows: {} \nNumber of Columns: {}".format(bank_data.shape[0],ban
 
     Number of Rows: 10000 
     Number of Columns: 14
-    
+  
+  
 ```python
 # data types, missing values and number of uniques
 bank_data_info = pd.concat([pd.DataFrame(bank_data.dtypes),pd.DataFrame(bank_data.isnull().sum()),pd.DataFrame(bank_data.nunique())],axis = 1)
@@ -206,6 +208,104 @@ The data has 10000 rows and columns. Let's see the data description.
 14. Exited: Whether the customer has left the bank or not. 1 means he/she left and 0 means he/she didn't. Type: int64
 
 From the above, we will not require RowNumber, CustomerId, and Surname are related to individuals.
+
+```python
+# drop columns RowNumber, CustomerId, and Surname
+bank_data.drop(["RowNumber", "CustomerId", "Surname"], axis = 1,inplace = True)
+bank_data.tail()
+```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CreditScore</th>
+      <th>Geography</th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Tenure</th>
+      <th>Balance</th>
+      <th>NumOfProducts</th>
+      <th>HasCrCard</th>
+      <th>IsActiveMember</th>
+      <th>EstimatedSalary</th>
+      <th>Exited</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>9995</th>
+      <td>771</td>
+      <td>France</td>
+      <td>Male</td>
+      <td>39</td>
+      <td>5</td>
+      <td>0.00</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>96270.64</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9996</th>
+      <td>516</td>
+      <td>France</td>
+      <td>Male</td>
+      <td>35</td>
+      <td>10</td>
+      <td>57369.61</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>101699.77</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9997</th>
+      <td>709</td>
+      <td>France</td>
+      <td>Female</td>
+      <td>36</td>
+      <td>7</td>
+      <td>0.00</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>42085.58</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9998</th>
+      <td>772</td>
+      <td>Germany</td>
+      <td>Male</td>
+      <td>42</td>
+      <td>3</td>
+      <td>75075.31</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>92888.52</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9999</th>
+      <td>792</td>
+      <td>France</td>
+      <td>Female</td>
+      <td>28</td>
+      <td>4</td>
+      <td>130142.79</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>38190.78</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div> 
 
 
 
