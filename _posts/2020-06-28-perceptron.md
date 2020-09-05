@@ -12,11 +12,11 @@ mathjax: "true"
 
 Why Customer retention is important? [source](https://www.dcrstrategies.com/customer-incentives/5-reasons-customer-retention-business/)
 
-    *1. Save Money On Marketing
+    1. Save Money On Marketing
     2. Repeat Purchases From Repeat Customers Means Repeat Profit
     3. Free Word-Of-Mouth Advertising
     4. Retained Customers Will Provide Valuable Feedback
-    5. Previous Customers Will Pay Premium Prices.* 
+    5. Previous Customers Will Pay Premium Prices. 
 
 Why and when will a customer leave his/her bank could be a challenging question to answer.
 
@@ -37,6 +37,12 @@ from sklearn.preprocessing import MinMaxScaler
 ```
 
 ## Read Data
+```python
+# source - https://www.kaggle.com/adammaus/predicting-churn-for-bank-customers
+bank_data = pd.read_csv('Churn_Modelling.csv')
+bank_data.head()
+```
+
 
 Here's some basic text.
 
