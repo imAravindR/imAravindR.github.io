@@ -51,7 +51,7 @@ As a Data Scientist, I help discover the information hidden in vast amounts of d
 
 **Deployment –** 
 
-> Flask, AWS, Git | GitHub, Docker, Streamlit.
+> Flask, AWS, Git/GitHub, Docker, Streamlit.
 
 # PROFESSIONAL EXPERIENCE
 
